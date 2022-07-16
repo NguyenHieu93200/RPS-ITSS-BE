@@ -11,11 +11,11 @@ class Comment extends Model
     protected $table = 'comments';
 
     protected $fillable = [
-        'user_id', 'content','created_at','updated_at'
+        'user_id','content','created_at','updated_at'
     ];
 
     public function user()
     {
-        return $this->belongsTo('App\Models\User', 'user_id');
+        return $this->hasOne('App\Models\User');
     }
 }
