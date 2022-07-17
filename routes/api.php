@@ -32,7 +32,8 @@ Route::get('/list', [UserController::class, 'index']);
 Route::prefix('v1')->group(function () {
     Route::group(['middleware' => 'auth:sanctum'], function () {
         Route::post('/auth/logout', [UserController::class, 'logout']);
-        Route::get('user/list', [UserController::class, 'index']);
+        Route::get('user/{id}', [UserController::class, 'show']);
+        Route::get('list', [UserController::class, 'index']);
         Route::put('/update/{id}', [UserController::class, 'update']);
         Route::delete('/delete/{id}', [UserController::class, 'destroy']);
 
