@@ -50,7 +50,8 @@ class UserController extends Controller
 
         return $this->success([
             'token' => $token,
-            'user_id' => $user->id
+            'user_id' => $user->id,
+            'role' => $user->role,
         ], 'Logged in successfully');
     }
 
@@ -116,8 +117,6 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //
-
         $user = User::find($id);
         $result = $user->delete();
 
