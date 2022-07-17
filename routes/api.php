@@ -46,6 +46,7 @@ Route::prefix('v1')->group(function () {
         //Game Score
         // Route::resource('score', 'GameScoreController');
         Route::get('rank/list', [GameScoreController::class, 'index']);
+        Route::put('/score/store', [GameScoreController::class, 'store']);
         
     });
 });
