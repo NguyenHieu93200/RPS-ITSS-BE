@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Traits\ApiResponser;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class UserController extends Controller
 {
@@ -24,6 +25,7 @@ class UserController extends Controller
             'name' => $attr['name'],
             'password' => bcrypt($attr['password']),
             'email' => $attr['email'],
+            'email_verified_at' => Carbon::now(),
             'role' => 2
         ]);
 
@@ -47,7 +49,8 @@ class UserController extends Controller
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return $this->success([
-            'token' => $token
+            'token' => $token,
+            'user_id' => $user->id
         ], 'Logged in successfully');
     }
 

@@ -2,6 +2,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\CommentController;
 
 
 /*
@@ -31,7 +32,11 @@ Route::prefix('v1')->group(function () {
         Route::get('profile', [UserController::class, 'profile']);
 
         //Comment
-        Route::resource('comment', 'CommentController');
+        Route::prefix('comment')->group(function () {
+            Route::get('', [CommentController::class, 'getComments']);
+            Route::post('', [CommentController::class, 'addComment']);
+            Route::delete('delete', [CommentController::class, 'deleteComment']);
+        });
 
         //Game Score
         Route::resource('score', 'GameScoreController');
