@@ -60,4 +60,61 @@ class UserController extends Controller
 
         return $this->success([], "Tokens Revoked");
     }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        //
+        $users = User::all();
+        return response()->json(['data' => $users]);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        //
+        $user = User::find($id);
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->password = $request->password;
+        $user->role = $request->role;
+        $user->avatar = $request->avatar;
+        $result = $user->save();
+
+        return response()->json([
+            'code' => 203,
+            'message' => "Update successfully",
+            'data' => $user
+        ], status: 203);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        //
+
+        $user = User::find($id);
+        $result = $user->delete();
+
+        return response()->json([
+            'code' => 204,
+            'message' => "Data has been deleted"
+        ], status: 204);
+    }
+
 }

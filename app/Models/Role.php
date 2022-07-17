@@ -17,8 +17,8 @@ class Role extends Model
         'name', 'description','created_at','updated_at'
     ];
     
-    public function users()
+    public function user()
     {
-        return $this->hasMany('App\Models\User', 'role_id');
+        return $this->hasMany(User::class);
     }
 }
