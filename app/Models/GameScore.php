@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class GameScore extends Model
-{
+{   
 
     use HasFactory;
     protected $table = 'game_scores';
@@ -17,7 +17,7 @@ class GameScore extends Model
 
     public function user()
     {
-        return $this->belongsTo('App\Models\User', 'user_id');
+        return $this->hasOne(User::class);
     }
     
 }

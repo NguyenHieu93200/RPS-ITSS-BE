@@ -2,6 +2,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\GameScoreController;
 
 
 /*
@@ -25,15 +26,21 @@ Route::prefix('v1')->group(function () {
     
 });
 
+Route::get('/list', [UserController::class, 'index']);
+
 Route::prefix('v1')->group(function () {
     Route::group(['middleware' => 'auth:sanctum'], function () {
         Route::post('/auth/logout', [UserController::class, 'logout']);
-        Route::get('profile', [UserController::class, 'profile']);
+        Route::get('user/list', [UserController::class, 'index']);
+        Route::put('/update/{id}', [UserController::class, 'update']);
+        Route::delete('/delete/{id}', [UserController::class, 'destroy']);
 
         //Comment
-        Route::resource('comment', 'CommentController');
+        // Route::resource('comment', 'CommentController');
 
         //Game Score
-        Route::resource('score', 'GameScoreController');
+        // Route::resource('score', 'GameScoreController');
+        Route::get('rank/list', [GameScoreController::class, 'index']);
+        
     });
 });
