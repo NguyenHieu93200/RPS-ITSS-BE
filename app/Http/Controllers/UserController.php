@@ -65,9 +65,21 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
-        $users = User::all();
+        //admin view
+        $users = DB::table('users')->join('game_scores', 'users.id', '=', 'game_scores.user_id')->get();
         return response()->json(['data' => $users]);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id=null)
+    {
+        //profile
+        return $id?User::find($id):User::all();
     }
 
     /**
@@ -82,9 +94,7 @@ class UserController extends Controller
         //
         $user = User::find($id);
         $user->name = $request->name;
-        $user->email = $request->email;
-        $user->password = $request->password;
-        $user->role = $request->role;
+
         $user->avatar = $request->avatar;
         $result = $user->save();
 
