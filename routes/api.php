@@ -3,6 +3,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\GameScoreController;
+use App\Http\Controllers\CommentController;
 
 
 /*
@@ -35,8 +36,11 @@ Route::prefix('v1')->group(function () {
         Route::put('/update/{id}', [UserController::class, 'update']);
         Route::delete('/delete/{id}', [UserController::class, 'destroy']);
 
-        //Comment
-        // Route::resource('comment', 'CommentController');
+        Route::prefix('comment')->group(function () {
+            Route::get('', [CommentController::class, 'getComments']);
+            Route::post('', [CommentController::class, 'addComment']);
+            Route::delete('delete', [CommentController::class, 'deleteComment']);
+        });
 
         //Game Score
         // Route::resource('score', 'GameScoreController');
