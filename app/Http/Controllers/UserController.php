@@ -97,9 +97,13 @@ class UserController extends Controller
     {
         //
         $user = User::find($id);
-        $user->name = $request->name;
 
-        $user->avatar = $request->avatar;
+        $fields = $request->validate([
+            'name' => 'required|string',
+            'avatar' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+        $user->name = $fields[name];
+        $user->avatar = $fields[avatar];
         $result = $user->save();
 
         return response()->json([
