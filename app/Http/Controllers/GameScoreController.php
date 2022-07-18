@@ -20,7 +20,13 @@ class GameScoreController extends Controller
     public function index()
     {
         //
-        $gamescore = DB::table('game_scores')->join('users', 'game_scores.user_id', '=', 'users.id')->get();
+        $gamescore = DB::table('game_scores')
+        ->join('users', 'game_scores.user_id', '=', 'users.id')
+        ->select('game_scores.*', 'users.id', 'users.name', 'users.avatar')
+        ->orderBy('game_scores.score', 'desc')
+        ->orderBy('game_scores.created_at', 'desc')
+        ->limit(20)
+        ->get();
         return response()->json(['data' => $gamescore]);
     }
     
@@ -33,7 +39,7 @@ class GameScoreController extends Controller
     public function store(Request $request)
     {       
         $userId = Auth::user()->id;
-
+        
         $gamescore = GameScore::updateOrCreate(
             ['user_id' => $userId],
             ['score' => $request->score]
