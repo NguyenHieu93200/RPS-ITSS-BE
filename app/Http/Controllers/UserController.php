@@ -70,7 +70,9 @@ class UserController extends Controller
     public function index()
     {
         //admin view
-        $users = DB::table('users')->join('game_scores', 'users.id', '=', 'game_scores.user_id')->get();
+        $users = DB::table('users')->select('users.id', 'users.name', 'users.email', 'users.avatar', 'game_scores.score')
+                    ->join('game_scores', 'users.id', '=', 'game_scores.user_id')
+                    ->get();
         return response()->json(['data' => $users]);
     }
 

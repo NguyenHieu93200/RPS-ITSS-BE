@@ -32,10 +32,14 @@ Route::get('/list', [UserController::class, 'index']);
 Route::prefix('v1')->group(function () {
     Route::group(['middleware' => 'auth:sanctum'], function () {
         Route::post('/auth/logout', [UserController::class, 'logout']);
-        Route::get('user/{id}', [UserController::class, 'show']);
-        Route::get('list', [UserController::class, 'index']);
-        Route::put('/update/{id}', [UserController::class, 'update']);
-        Route::delete('/delete/{id}', [UserController::class, 'destroy']);
+
+        Route::prefix('user')->group(function () {
+            Route::get('{id}', [UserController::class, 'show'])->where('id', '[0-9]+');;
+            Route::get('list', [UserController::class, 'index']);
+            Route::put('/update/{id}', [UserController::class, 'update']);
+            Route::delete('/delete/{id}', [UserController::class, 'destroy']);
+        });
+
 
         Route::prefix('comment')->group(function () {
             Route::get('', [CommentController::class, 'getComments']);
@@ -44,7 +48,6 @@ Route::prefix('v1')->group(function () {
         });
 
         //Game Score
-        // Route::resource('score', 'GameScoreController');
         Route::get('rank/list', [GameScoreController::class, 'index']);
         Route::put('/score/store', [GameScoreController::class, 'store']);
         
