@@ -8,10 +8,16 @@ use App\Traits\ApiResponser;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
-
+use App\Services\FileService;
+use App\Http\Requests\Users\UpdateRequest;
 class UserController extends Controller
 {
     use ApiResponser;
+    protected $fileService;
+
+    public function __construct(FileService $fileService) {
+        $this->fileService = $fileService;
+    }
 
     public function register(Request $request): \Illuminate\Http\JsonResponse
     {
@@ -95,24 +101,23 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateRequest $request, $id)
     {
         //
         $user = User::find($id);
 
-        $fields = $request->validate([
-            'name' => 'required|string',
-            'avatar' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-        ]);
-        $user->name = $fields[name];
-        $user->avatar = $fields[avatar];
-        $result = $user->save();
+        if (isset($request->avatar)) {
+            $file = $request->avatar;
+            $filePath = 'public/user/' . $user->id . '/avatar';
+            $fileUrl =  $this->fileService->uploadFileToS3($file, $filePath);
+            $user->avatar =  $fileUrl;
+            $user->save();
+        } 
+        if (isset($request->name)) {
+            $user->name = $request->name;
+        }
 
-        return response()->json([
-            'code' => 203,
-            'message' => "Update successfully",
-            'data' => $user
-        ], status: 203);
+        return _success($user->avatar, __('message.updated_success'), HTTP_CREATED);
     }
 
     /**

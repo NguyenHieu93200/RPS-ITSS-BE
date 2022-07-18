@@ -4,7 +4,7 @@ namespace App\Http\Requests\Users;
 
 use App\Http\Requests\BaseRequest;
 
-class LoginRequest extends BaseRequest
+class UpdateRequest extends BaseRequest
 {
     /**
      * Get custom rules for validator errors.
@@ -14,9 +14,8 @@ class LoginRequest extends BaseRequest
     public function rules(): array
     {
         return [
-            'email' => 'required|string|email',
-            'password' => 'required|string|min:6',
-            'remember_me' => 'boolean'
+            'name' => 'string',
+            'avatar' => 'mimes:jpeg,jpg,png,gif|required|max:500000'
         ];
     }
 
