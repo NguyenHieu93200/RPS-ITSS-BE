@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Comment;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class CommentController extends Controller
 {
@@ -23,7 +24,20 @@ class CommentController extends Controller
         $comment->save();
     }
 
-    public function deleteComment(Request $request) {
-        Comment::where('id',$request->id)->delete();
+    public function deleteComment($id) {
+        $userId = Auth::user()->id;
+
+
+        // dd($userId);
+        Comment::find($id) && $deleted = DB::table('comments')
+                        ->where(
+                            'user_id','=' ,$userId
+                            ) ->delete();
+
+        return response()->json([
+            'code' => 204,
+            'message' => "Data has been deleted"
+        ], status: 204);
+
     }
 }

@@ -40,7 +40,7 @@ Route::prefix('v1')->group(function () {
         Route::prefix('comment')->group(function () {
             Route::get('', [CommentController::class, 'getComments']);
             Route::post('', [CommentController::class, 'addComment']);
-            Route::delete('delete', [CommentController::class, 'deleteComment']);
+            Route::delete('/delete/{id}', [CommentController::class, 'deleteComment']);
         });
 
         //Game Score
