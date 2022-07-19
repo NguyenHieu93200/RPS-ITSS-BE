@@ -125,19 +125,18 @@ class UserController extends Controller
     {
         //
         $user = User::find($id);
-
         if (isset($request->avatar)) {
-            $file = $request->avatar;
-            $filePath = 'public/user/' . $user->id . '/avatar';
-            $fileUrl =  $this->fileService->uploadFileToS3($file, $filePath);
-            $user->avatar =  $fileUrl;
+            $uploadedFile = $request->avatar;
+            $filename = time().$uploadedFile->getClientOriginalName();
+            $path = $uploadedFile->move('images', $filename);
+            $user->avatar =  'public/images/'.$filename;
             $user->save();
         } 
         if (isset($request->name)) {
             $user->name = $request->name;
         }
 
-        return _success($user->avatar, __('message.updated_success'), HTTP_CREATED);
+        return _success($user, __('message.updated_success'), HTTP_CREATED);
     }
 
     /**
