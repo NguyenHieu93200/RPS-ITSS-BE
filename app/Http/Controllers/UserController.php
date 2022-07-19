@@ -89,11 +89,10 @@ class UserController extends Controller
         //admin view
 
         $user = DB::table('users')
-        ->join('game_scores', 'users.id', '=', 'game_scores.user_id')
+        ->leftJoin('game_scores', 'users.id', '=', 'game_scores.user_id')
         ->select('game_scores.score', 'users.id', 'users.name', 'users.avatar')
         ->orderBy('game_scores.score', 'desc')
         ->orderBy('game_scores.created_at', 'desc')
-        ->limit(20)
         ->get();
 
         $array = json_decode($user, true);
