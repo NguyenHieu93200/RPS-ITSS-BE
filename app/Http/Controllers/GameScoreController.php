@@ -7,9 +7,6 @@ use App\Models\User;
 use App\Models\GameScore;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-
-
-
 class GameScoreController extends Controller
 {
     /**
@@ -20,19 +17,12 @@ class GameScoreController extends Controller
     public function index()
     {
         //
-        $userscore = DB::table('game_scores')
-        ->join('users', 'game_scores.user_id', '=', 'users.id')
-        ->select('game_scores.score', 'users.id', 'users.name', 'users.avatar')
-        ->orderBy('game_scores.score', 'desc')
-        ->orderBy('game_scores.created_at', 'desc')
-        ->limit(20)
-        ->get();
+        $userscore = GameScore::select('score', 'user_id')->orderBy('score', 'DESC')->with(['user' => function ($query) {
+            $query->select('id', 'name', 'email', 'avatar');
+        }])->get()->toArray();
+        array_intersect_key($userscore, array_unique(array_column($userscore, 'user_id')));
 
-        $array = json_decode($userscore, true);
-        usort($array, fn($a, $b) => $a['score'] < $b['score']);
-        $data = array_intersect_key($array, array_unique(array_column($array, 'id')));
-       
-        return _success($data, __('message.show_success'), HTTP_SUCCESS);
+        return _success($userscore, __('message.show_success'), HTTP_SUCCESS);
     }
     
     /**
