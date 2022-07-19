@@ -25,7 +25,7 @@ class GameScoreController extends Controller
         ->selectRaw('MAX(game_scores.score) AS score, users.id, users.name, users.avatar')
         ->orderBy('game_scores.score', 'desc')
         ->orderBy('game_scores.created_at', 'desc')
-        ->groupBy('users.id')
+        ->groupBy('users.id', 'users.name', 'users.avatar')
         ->limit(20)
         ->get();
 
