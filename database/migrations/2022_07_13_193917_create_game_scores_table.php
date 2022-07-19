@@ -17,7 +17,7 @@ class CreateGameScoresTable extends Migration
         Schema::create('game_scores', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->foreignIdFor(User::class);
-            $table->integer('score');
+            $table->integer('score')->default(0);
             $table->timestamps();
         });
     }

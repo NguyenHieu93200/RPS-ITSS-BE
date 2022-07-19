@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+
+use App\Models\GameScore;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Traits\ApiResponser;
@@ -34,6 +36,15 @@ class UserController extends Controller
             'email_verified_at' => Carbon::now(),
             'role' => 2
         ]);
+
+        $userId = $user->id;
+
+        $gamescore = GameScore::create(
+            [
+                'user_id' => $userId,
+                'score' => '0'
+            ]
+        );
 
         return $this->success([
             'token' => $user->createToken('auth_token')->plainTextToken
@@ -76,10 +87,20 @@ class UserController extends Controller
     public function index()
     {
         //admin view
-        $users = DB::table('users')->select('users.id', 'users.name', 'users.email', 'users.avatar', 'game_scores.score')
-                    ->join('game_scores', 'users.id', '=', 'game_scores.user_id')
-                    ->get();
-        return response()->json(['data' => $users]);
+
+        $user = DB::table('users')
+        ->join('game_scores', 'users.id', '=', 'game_scores.user_id')
+        ->select('game_scores.score', 'users.id', 'users.name', 'users.avatar')
+        ->orderBy('game_scores.score', 'desc')
+        ->orderBy('game_scores.created_at', 'desc')
+        ->limit(20)
+        ->get();
+
+        $array = json_decode($user, true);
+        usort($array, fn($a, $b) => $a['score'] < $b['score']);
+        $data = array_intersect_key($array, array_unique(array_column($array, 'id')));
+       
+        return _success($data, __('message.show_success'), HTTP_SUCCESS);
     }
 
     /**
