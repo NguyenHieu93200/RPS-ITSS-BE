@@ -20,16 +20,19 @@ class GameScoreController extends Controller
     public function index()
     {
         //
-        $gamescore = DB::table('game_scores')
+        $userscore = DB::table('game_scores')
         ->join('users', 'game_scores.user_id', '=', 'users.id')
-        ->selectRaw('MAX(game_scores.score) AS score, users.id, users.name, users.avatar')
+        ->select('game_scores.score', 'users.id', 'users.name', 'users.avatar')
         ->orderBy('game_scores.score', 'desc')
         ->orderBy('game_scores.created_at', 'desc')
-        ->groupBy('users.id', 'users.name', 'users.avatar')
         ->limit(20)
         ->get();
 
-        return response()->json(['data' => $gamescore]);
+        $array = json_decode($userscore, true);
+        usort($array, fn($a, $b) => $a['score'] < $b['score']);
+        $data = array_intersect_key($array, array_unique(array_column($array, 'id')));
+       
+        return _success($data, __('message.show_success'), HTTP_SUCCESS);
     }
     
     /**
