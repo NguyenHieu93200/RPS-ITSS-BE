@@ -17,12 +17,24 @@ class GameScoreController extends Controller
     public function index()
     {
         //
-        $userscore = GameScore::select('score', 'user_id')->orderBy('score', 'DESC')->with(['user' => function ($query) {
-            $query->select('id', 'name', 'email', 'avatar');
-        }])->get()->toArray();
-        array_intersect_key($userscore, array_unique(array_column($userscore, 'user_id')));
+        $userscore = DB::table('game_scores')
+        ->leftJoin('users', 'game_scores.user_id', '=', 'users.id')
+        ->select('game_scores.score', 'users.id', 'users.name', 'users.avatar')
+        ->orderBy('game_scores.score', 'desc')
+        ->orderBy('game_scores.created_at', 'desc')
+        ->limit(20)
+        ->get();
 
-        return _success($userscore, __('message.show_success'), HTTP_SUCCESS);
+        $array = json_decode($userscore, true);
+        usort($array, fn($a, $b) => $a['score'] < $b['score']);
+        $data = array_intersect_key($array, array_unique(array_column($array, 'user_id')));
+
+        $return_arr = [];
+        foreach ($data as $value) {
+            array_push($return_arr, $value);
+        }
+
+        return _success($return_arr, __('message.show_success'), HTTP_SUCCESS);
     }
     
     /**

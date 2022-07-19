@@ -97,9 +97,14 @@ class UserController extends Controller
 
         $array = json_decode($user, true);
         usort($array, fn($a, $b) => $a['score'] < $b['score']);
-        array_intersect_key($array, array_unique(array_column($array, 'id')));
-       
-        return _success($array, __('message.show_success'), HTTP_SUCCESS);
+        $data = array_intersect_key($array, array_unique(array_column($array, 'id')));
+        
+        $return_arr = [];
+        foreach ($data as $value) {
+            array_push($return_arr, $value);
+        }
+
+        return _success($return_arr, __('message.show_success'), HTTP_SUCCESS);
     }
 
     /**
