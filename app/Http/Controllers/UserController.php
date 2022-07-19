@@ -90,7 +90,8 @@ class UserController extends Controller
 
         $user = DB::table('users')
         ->leftJoin('game_scores', 'users.id', '=', 'game_scores.user_id')
-        ->select('game_scores.score', 'users.id', 'users.name', 'users.avatar')
+        ->select('game_scores.score', 'users.id', 'users.name', 'users.avatar', 'users.role')
+        ->where('role', '!=', 1)
         ->orderBy('game_scores.score', 'desc')
         ->orderBy('game_scores.created_at', 'desc')
         ->get();
