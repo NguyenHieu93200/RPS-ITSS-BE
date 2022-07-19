@@ -27,7 +27,7 @@ class GameScoreController extends Controller
 
         $array = json_decode($userscore, true);
         usort($array, fn($a, $b) => $a['score'] < $b['score']);
-        $data = array_intersect_key($array, array_unique(array_column($array, 'user_id')));
+        $data = array_intersect_key($array, array_unique(array_column($array, 'id')));
 
         $return_arr = [];
         foreach ($data as $value) {
