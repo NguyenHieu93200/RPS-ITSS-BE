@@ -140,6 +140,7 @@ class UserController extends Controller
         } 
         if (isset($request->name)) {
             $user->name = $request->name;
+            $user->save();
         }
 
         return _success($user, __('message.updated_success'), HTTP_CREATED);

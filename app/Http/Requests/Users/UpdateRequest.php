@@ -15,7 +15,8 @@ class UpdateRequest extends BaseRequest
     {
         return [
             'name' => 'string',
-            'avatar' => 'mimes:jpeg,jpg,png,gif|required|max:500000'
+            'email' => 'string',
+            'avatar' => 'mimes:jpeg,jpg,png,gif|max:500000'
         ];
     }
 
