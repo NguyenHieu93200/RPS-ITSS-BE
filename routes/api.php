@@ -36,7 +36,7 @@ Route::prefix('v1')->group(function () {
         Route::prefix('user')->group(function () {
             Route::get('{id}', [UserController::class, 'show'])->where('id', '[0-9]+');;
             Route::get('list', [UserController::class, 'index']);
-            Route::put('/update/{id}', [UserController::class, 'update']);
+            Route::post('/update/{id}', [UserController::class, 'update']);
             Route::delete('/delete/{id}', [UserController::class, 'destroy']);
         });
 

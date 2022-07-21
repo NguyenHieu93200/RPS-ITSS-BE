@@ -90,7 +90,7 @@ class UserController extends Controller
 
         $user = DB::table('users')
         ->leftJoin('game_scores', 'users.id', '=', 'game_scores.user_id')
-        ->select('game_scores.score', 'users.id', 'users.name', 'users.avatar', 'users.role')
+        ->select('game_scores.score', 'users.id', 'users.name', 'users.avatar', 'users.role', 'users.email')
         ->where('role', '!=', 1)
         ->orderBy('game_scores.score', 'desc')
         ->orderBy('game_scores.created_at', 'desc')
@@ -131,17 +131,10 @@ class UserController extends Controller
     {
         //
         $user = User::find($id);
-        if (isset($request->avatar)) {
-            $uploadedFile = $request->avatar;
-            $filename = time().$uploadedFile->getClientOriginalName();
-            $path = $uploadedFile->move('images', $filename);
-            $user->avatar =  'public/images/'.$filename;
-            $user->save();
-        } 
-        if (isset($request->name)) {
-            $user->name = $request->name;
-            $user->save();
-        }
+        $formData = [];
+        $formData['name'] = $request->name;
+        $formData['avatar'] = $request->avatar;
+        $user = $user->update($formData);
 
         return _success($user, __('message.updated_success'), HTTP_CREATED);
     }
